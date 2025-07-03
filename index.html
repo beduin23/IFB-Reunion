@@ -472,6 +472,8 @@
             // Your Google Apps Script Web App URL
             const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybLeYS3aZ2CiPIr1YQA-tC-4sSVdeKOCnxr7mnbs0f8yBTvlkebZ7kUSIXcxo4gEbpjg/exec';
             
+            console.log('Attempting to submit to Google Sheets...', data);
+            
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
@@ -481,11 +483,18 @@
                     body: JSON.stringify(data)
                 });
 
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
                 if (!response.ok) {
-                    throw new Error('Failed to submit to Google Sheets');
+                    const errorText = await response.text();
+                    console.error('Response error:', errorText);
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
                 }
 
-                return await response.json();
+                const result = await response.json();
+                console.log('Success response:', result);
+                return result;
             } catch (error) {
                 console.error('Google Sheets submission error:', error);
                 throw error;
