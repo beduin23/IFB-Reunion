@@ -437,10 +437,65 @@
             locationCheckboxesContainer.appendChild(label);
         });
 
+        // --- CSV Export Function ---
+        function downloadCSV(data, filename) {
+            // Convert data to CSV format
+            const headers = Object.keys(data);
+            const csvContent = [
+                headers.join(','),
+                headers.map(header => {
+                    let value = data[header];
+                    if (Array.isArray(value)) {
+                        value = value.join('; ');
+                    }
+                    // Escape commas and quotes in CSV
+                    if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
+                        value = '"' + value.replace(/"/g, '""') + '"';
+                    }
+                    return value;
+                }).join(',')
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // --- Google Sheets Submission Function ---
+        async function submitToGoogleSheets(data) {
+            // Your Google Apps Script Web App URL
+            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybLeYS3aZ2CiPIr1YQA-tC-4sSVdeKOCnxr7mnbs0f8yBTvlkebZ7kUSIXcxo4gEbpjg/exec';
+            
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit to Google Sheets');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Google Sheets submission error:', error);
+                throw error;
+            }
+        }
+
         // --- Form Submission Logic ---
         reunionSurveyForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            showMessage('Processing your survey...', 'info');
+            showMessage('Submitting your survey...', 'info');
 
             // Collect all form data
             const formData = new FormData(reunionSurveyForm);
@@ -461,12 +516,24 @@
             activityDnD.updateOutput(); // Ensure hidden input is updated before submission
             surveyData.prioritizedActivities = document.getElementById('prioritizedActivitiesOutput').value;
 
+            // Add timestamp
+            surveyData.timestamp = new Date().toISOString();
+
             try {
-                // Display the collected data in console for now
+                // Display the collected data in console
                 console.log('Survey Data:', surveyData);
                 
-                // Show success message
-                showMessage('Survey completed successfully! Thank you for your input. (Note: Data is logged to console for demonstration)', 'success');
+                // Try to submit to Google Sheets (this is the main data collection method)
+                try {
+                    await submitToGoogleSheets(surveyData);
+                    showMessage('Survey submitted successfully! Thank you for your participation.', 'success');
+                } catch (gsError) {
+                    // If Google Sheets fails, offer CSV download as backup
+                    console.warn('Google Sheets submission failed, offering CSV download:', gsError);
+                    const timestamp = new Date().toISOString().split('T')[0];
+                    downloadCSV(surveyData, `reunion-survey-data-${timestamp}.csv`);
+                    showMessage('Survey data saved locally. Please send the downloaded CSV file to the survey organizer.', 'info');
+                }
                 
                 // Reset the form
                 reunionSurveyForm.reset(); // Clear the form
