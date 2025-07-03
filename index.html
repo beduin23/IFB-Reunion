@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Reunion Survey</title>
+    <title>Female BUETian Alumni North America Reunion 2026: North America Interest Survey</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts - Inter -->
@@ -38,7 +38,7 @@
 
     <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl max-w-4xl w-full border border-gray-200">
         <h1 class="text-3xl sm:text-4xl font-extrabold text-center mb-6 text-gray-800 leading-tight">
-            North America Alumni Reunion Survey
+            Female BUETian Alumni North America Reunion 2026: North America Interest Survey
         </h1>
 
         <p class="text-gray-600 mb-8 text-center text-base sm:text-lg">
@@ -46,9 +46,9 @@
         </p>
 
         <form id="reunion-survey-form" class="space-y-6">
-            <!-- Section 1: Contact Information & General Interest -->
+            <!-- Section 1: Your Details & Department -->
             <div class="p-5 rounded-lg border border-gray-200 bg-gray-50">
-                <h2 class="text-2xl font-bold mb-4 text-gray-800">Section 1: Your Details & Interest</h2>
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Section 1: Your Details & Department</h2>
 
                 <div class="mb-4">
                     <label for="fullName" class="block text-gray-700 text-sm font-bold mb-2">Your Full Name:</label>
@@ -63,7 +63,28 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Are you interested in attending a North America Alumni Reunion in Summer 2026?</label>
+                    <label for="batch" class="block text-gray-700 text-sm font-bold mb-2">Your Batch:</label>
+                    <input type="text" id="batch" name="batch" required
+                           class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-indigo-400">
+                </div>
+
+                <!-- Your Department (Dropdown) - Now in Section 1 -->
+                <div class="mb-4">
+                    <label for="department" class="block text-gray-700 text-sm font-bold mb-2">Your Department:</label>
+                    <select id="department" name="department" required
+                            class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-indigo-400">
+                        <option value="">Select your department</option>
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section 2: Interest -->
+            <div class="p-5 rounded-lg border border-gray-200 bg-gray-50">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Section 2: Interest</h2>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Are you interested in attending a North America Alumni Reunion in 2026?</label>
                     <div class="mt-2 space-y-2">
                         <label class="inline-flex items-center">
                             <input type="radio" name="attendanceInterest" value="Yes, definitely!" class="form-radio text-indigo-600 h-4 w-4">
@@ -85,9 +106,9 @@
                 </div>
             </div>
 
-            <!-- Section 2: Volunteer Interest (with Drag & Drop) -->
+            <!-- Section 3: Volunteer Interest -->
             <div class="p-5 rounded-lg border border-gray-200 bg-gray-50">
-                <h2 class="text-2xl font-bold mb-4 text-gray-800">Section 2: Volunteer Interest</h2>
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Section 3: Volunteer Interest</h2>
 
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Are you interested in volunteering to help organize the reunion?</label>
@@ -106,115 +127,55 @@
                         </label>
                     </div>
                 </div>
+            </div>
 
-                <div id="volunteer-roles-section" class="hidden mt-6">
-                    <p class="text-gray-600 mb-4 text-base sm:text-lg">
-                        Drag and drop your preferred volunteer roles from the "Available Roles" list to "My Prioritized Roles" to rank them in order of your interest.
-                    </p>
+            <!-- Section 4: Location & Preferences (Multiple Choice) -->
+            <div class="p-5 rounded-lg border border-gray-200 bg-gray-50">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Section 4: Location & Preferences</h2>
+                <p class="text-gray-600 mb-4 text-base sm:text-lg">
+                    Which US States or Canada would you prefer for the reunion? (Select all that apply)
+                </p>
 
-                    <div class="flex flex-col md:flex-row gap-6 md:gap-8">
-                        <!-- Available Roles Section -->
-                        <div class="flex-1 bg-blue-50 p-4 sm:p-5 rounded-lg border-2 border-blue-200 shadow-inner">
-                            <h3 class="text-xl font-bold mb-4 text-blue-800">Available Roles</h3>
-                            <div id="available-roles" class="min-h-[200px] space-y-3 p-2 bg-blue-100 rounded-md border border-blue-300">
-                                <!-- Draggable items -->
-                                <div id="role1" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Venue & Logistics</div>
-                                <div id="role2" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Activities & Entertainment</div>
-                                <div id="role3" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Communications & Marketing</div>
-                                <div id="role4" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Sponsorship & Fundraising</div>
-                                <div id="role5" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Registration & Check-in</div>
-                                <div id="role6" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Alumni Outreach</div>
-                            </div>
-                        </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                    <!-- Checkbox items for states and Canada will be populated by JS -->
+                    <div id="location-checkboxes" class="space-y-1"></div>
+                </div>
 
-                        <!-- Drop Zone Section -->
-                        <div class="flex-1 bg-green-50 p-4 sm:p-5 rounded-lg border-2 border-green-200 shadow-inner">
-                            <h3 class="text-xl font-bold mb-4 text-green-800">My Prioritized Roles</h3>
-                            <div id="prioritized-roles" class="drop-zone min-h-[200px] border-2 border-dashed border-green-400 p-3 rounded-md flex flex-col gap-3 bg-green-100">
-                                <p id="drop-zone-placeholder" class="text-gray-500 text-sm italic text-center mt-8">Drag roles here to prioritize them</p>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="hidden" id="prioritizedRolesOutput" name="prioritizedRolesOutput">
+                <div class="mb-4 mt-6">
+                    <label for="particularCity" class="block text-gray-700 text-sm font-bold mb-2">If you are interested in any particular city, write it down:</label>
+                    <input type="text" id="particularCity" name="particularCity"
+                           class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-indigo-400">
                 </div>
             </div>
 
-            <!-- Section 3: Location & Preferences -->
+            <!-- Section 5: Activities & Additional Thoughts (Drag & Drop for Activities) -->
             <div class="p-5 rounded-lg border border-gray-200 bg-gray-50">
-                <h2 class="text-2xl font-bold mb-4 text-gray-800">Section 3: Location & Preferences</h2>
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Section 5: Activities & Additional Thoughts</h2>
 
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">If the reunion were held in California, which region would you most prefer?</label>
-                    <div class="mt-2 space-y-2">
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="californiaRegion" value="Northern California (e.g., San Francisco Bay Area, Sacramento)" class="form-radio text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Northern California (e.g., San Francisco Bay Area, Sacramento)</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="radio" name="californiaRegion" value="Southern California (e.g., Los Angeles, San Diego, Orange County)" class="form-radio text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Southern California (e.g., Los Angeles, San Diego, Orange County)</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="radio" name="californiaRegion" value="Central Valley (e.g., Fresno, Bakersfield)" class="form-radio text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Central Valley (e.g., Fresno, Bakersfield)</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="radio" name="californiaRegion" value="No strong preference within California." class="form-radio text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">No strong preference within California.</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="radio" name="californiaRegion" value="Other" class="form-radio text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">I'd prefer a different state in North America (please specify below).</span>
-                        </label>
+                    <h3 class="text-xl font-bold mb-4 text-gray-800">What type of reunion activities are you most interested in?</h3>
+                    <p class="text-gray-600 mb-4 text-base sm:text-lg">
+                        Drag and drop your preferred activities from "Available Activities" to "My Prioritized Activities" to rank them in order of your interest.
+                    </p>
+
+                    <div class="flex flex-col md:flex-row gap-6 md:gap-8">
+                        <!-- Available Activities Section -->
+                        <div class="flex-1 bg-blue-50 p-4 sm:p-5 rounded-lg border-2 border-blue-200 shadow-inner">
+                            <h4 class="text-lg font-bold mb-4 text-blue-800">Available Activities</h4>
+                            <div id="available-activities" class="min-h-[200px] space-y-3 p-2 bg-blue-100 rounded-md border border-blue-300">
+                                <!-- Draggable items will be populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Drop Zone Section for Activities -->
+                        <div class="flex-1 bg-green-50 p-4 sm:p-5 rounded-lg border-2 border-green-200 shadow-inner">
+                            <h4 class="text-lg font-bold mb-4 text-green-800">My Prioritized Activities</h4>
+                            <div id="prioritized-activities" class="drop-zone min-h-[200px] border-2 border-dashed border-green-400 p-3 rounded-md flex flex-col gap-3 bg-green-100">
+                                <p id="activity-placeholder" class="text-gray-500 text-sm italic text-center mt-8">Drag activities here to prioritize them</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="mb-4">
-                    <label for="otherLocation" class="block text-gray-700 text-sm font-bold mb-2">If "Other" for location, please specify:</label>
-                    <input type="text" id="otherLocation" name="otherLocation"
-                           class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-indigo-400">
-                </div>
-
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">What type of reunion activities are you most interested in? (Select all that apply)</label>
-                    <div class="mt-2 space-y-2">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" name="activityInterest" value="Formal Dinner/Gala" class="form-checkbox text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Formal Dinner/Gala</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="checkbox" name="activityInterest" value="Casual Mixer/Reception" class="form-checkbox text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Casual Mixer/Reception</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="checkbox" name="activityInterest" value="Campus Tour/Visit (if applicable to alumni)" class="form-checkbox text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Campus Tour/Visit (if applicable to alumni)</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="checkbox" name="activityInterest" value="Family-Friendly Picnic/BBQ" class="form-checkbox text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Family-Friendly Picnic/BBQ</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="checkbox" name="activityInterest" value="Guest Speakers/Presentations" class="form-checkbox text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Guest Speakers/Presentations</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="checkbox" name="activityInterest" value="Outdoor Activities (e.g., hiking, beach day)" class="form-checkbox text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Outdoor Activities (e.g., hiking, beach day)</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="checkbox" name="activityInterest" value="Networking Opportunities" class="form-checkbox text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Networking Opportunities</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="checkbox" name="activityInterest" value="Theme Party" class="form-checkbox text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Theme Party</span>
-                        </label>
-                        <label class="inline-flex items-center ml-4">
-                            <input type="checkbox" name="activityInterest" value="Other" class="form-checkbox text-indigo-600 h-4 w-4">
-                            <span class="ml-2 text-gray-700">Other (please specify below)</span>
-                        </label>
-                    </div>
+                    <input type="hidden" id="prioritizedActivitiesOutput" name="prioritizedActivitiesOutput">
                 </div>
 
                 <div class="mb-4">
@@ -222,11 +183,7 @@
                     <input type="text" id="otherActivity" name="otherActivity"
                            class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-indigo-400">
                 </div>
-            </div>
 
-            <!-- Section 4: Additional Thoughts -->
-            <div class="p-5 rounded-lg border border-gray-200 bg-gray-50">
-                <h2 class="text-2xl font-bold mb-4 text-gray-800">Section 4: Additional Thoughts</h2>
                 <div class="mb-4">
                     <label for="additionalThoughts" class="block text-gray-700 text-sm font-bold mb-2">Do you have any other ideas, suggestions, or concerns regarding the reunion that you'd like to share?</label>
                     <textarea id="additionalThoughts" name="additionalThoughts" rows="4"
@@ -248,145 +205,253 @@
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase Configuration (provided by Canvas environment)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         let db;
-        let userId = crypto.randomUUID(); // Generate a random UUID for each user session
-        let isAuthReady = true; // Set to true immediately as no async auth is needed
+        let auth;
+        let userId = null;
+        let isAuthReady = false;
 
         const messageBox = document.getElementById('message-box');
         const reunionSurveyForm = document.getElementById('reunion-survey-form');
-        const volunteerInterestRadios = document.querySelectorAll('input[name="volunteerInterest"]');
-        const volunteerRolesSection = document.getElementById('volunteer-roles-section');
-        const prioritizedRolesOutputInput = document.getElementById('prioritizedRolesOutput'); // Hidden input for D&D result
 
         // Initialize Firebase
         if (Object.keys(firebaseConfig).length > 0) {
             const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
-            showMessage(`Firebase initialized. User ID for this session: ${userId}`, 'info');
+            auth = getAuth(app);
+
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    isAuthReady = true;
+                    showMessage(`Authenticated as user: ${userId}`, 'info');
+                } else {
+                    try {
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    } catch (error) {
+                        console.error("Firebase authentication error:", error);
+                        showMessage(`Authentication failed: ${error.message}`, 'error');
+                    }
+                }
+            });
         } else {
             showMessage("Firebase configuration not found. Data will not be saved.", 'error');
         }
 
-        // --- Drag & Drop Logic (from previous version, integrated) ---
-        const availableRoles = document.getElementById('available-roles');
-        const prioritizedRoles = document.getElementById('prioritized-roles');
-        const dropZonePlaceholder = document.getElementById('drop-zone-placeholder');
+        // --- Reusable Drag & Drop Manager ---
+        class DragAndDropManager {
+            constructor(availableContainerId, prioritizedContainerId, placeholderId, outputHiddenInputId, items) {
+                this.availableContainer = document.getElementById(availableContainerId);
+                this.prioritizedContainer = document.getElementById(prioritizedContainerId);
+                this.placeholder = document.getElementById(placeholderId);
+                this.outputHiddenInput = document.getElementById(outputHiddenInputId);
+                this.items = items; // Array of item text values
 
-        let draggedItem = null;
+                this.draggedItem = null;
 
-        document.querySelectorAll('.draggable-item').forEach(item => {
-            item.addEventListener('dragstart', handleDragStart);
+                this.initItems();
+                this.addEventListeners();
+                this.updatePlaceholderVisibility();
+
+                // Observe changes in prioritized container to update placeholder
+                const observer = new MutationObserver(() => this.updatePlaceholderVisibility());
+                observer.observe(this.prioritizedContainer, { childList: true });
+            }
+
+            initItems() {
+                this.items.forEach((text, index) => {
+                    const item = document.createElement('div');
+                    item.id = `${this.availableContainer.id}-item-${index}`;
+                    item.draggable = true;
+                    item.classList.add('draggable-item', 'bg-white', 'p-3', 'rounded-md', 'shadow-sm', 'cursor-grab', 'hover:bg-blue-200', 'text-gray-700', 'font-medium');
+                    item.textContent = text;
+                    item.addEventListener('dragstart', this.handleDragStart.bind(this));
+                    this.availableContainer.appendChild(item);
+                });
+            }
+
+            addEventListeners() {
+                this.prioritizedContainer.addEventListener('dragover', this.handleDragOver.bind(this));
+                this.prioritizedContainer.addEventListener('dragenter', this.handleDragEnter.bind(this));
+                this.prioritizedContainer.addEventListener('dragleave', this.handleDragLeave.bind(this));
+                this.prioritizedContainer.addEventListener('drop', this.handleDrop.bind(this));
+
+                this.availableContainer.addEventListener('dragover', this.handleDragOver.bind(this));
+                this.availableContainer.addEventListener('dragenter', this.handleDragEnter.bind(this));
+                this.availableContainer.addEventListener('dragleave', this.handleDragLeave.bind(this));
+                this.availableContainer.addEventListener('drop', this.handleDrop.bind(this));
+            }
+
+            handleDragStart(e) {
+                this.draggedItem = e.target;
+                e.dataTransfer.setData('text/plain', e.target.id);
+                e.target.classList.add('dragging');
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                e.currentTarget.classList.add('drag-over');
+                const target = e.target;
+                if (target.classList.contains('draggable-item')) {
+                    target.classList.add('bg-yellow-100', 'border-yellow-300');
+                }
+            }
+
+            handleDragEnter(e) {
+                e.preventDefault();
+                e.currentTarget.classList.add('drag-over');
+            }
+
+            handleDragLeave(e) {
+                e.currentTarget.classList.remove('drag-over');
+                document.querySelectorAll('.draggable-item').forEach(item => {
+                    item.classList.remove('bg-yellow-100', 'border-yellow-300');
+                });
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                e.currentTarget.classList.remove('drag-over');
+                document.querySelectorAll('.draggable-item').forEach(item => {
+                    item.classList.remove('bg-yellow-100', 'border-yellow-300');
+                });
+
+                if (this.draggedItem) {
+                    if (e.currentTarget === this.prioritizedContainer) {
+                        const afterElement = this.getDragAfterElement(this.prioritizedContainer, e.clientY);
+                        if (afterElement == null) {
+                            this.prioritizedContainer.appendChild(this.draggedItem);
+                        } else {
+                            this.prioritizedContainer.insertBefore(this.draggedItem, afterElement);
+                        }
+                    } else if (e.currentTarget === this.availableContainer) {
+                        this.availableContainer.appendChild(this.draggedItem);
+                    }
+                    this.draggedItem.classList.remove('dragging');
+                    this.draggedItem = null;
+                    this.updatePlaceholderVisibility();
+                    this.updateOutput(); // Update hidden input on drop
+                }
+            }
+
+            getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+
+            updatePlaceholderVisibility() {
+                if (this.prioritizedContainer.querySelectorAll('.draggable-item').length === 0) {
+                    if (!this.prioritizedContainer.contains(this.placeholder)) {
+                        this.prioritizedContainer.appendChild(this.placeholder);
+                    }
+                } else {
+                    if (this.prioritizedContainer.contains(this.placeholder)) {
+                        this.placeholder.remove();
+                    }
+                }
+            }
+
+            updateOutput() {
+                const prioritizedItems = Array.from(this.prioritizedContainer.children)
+                                                .filter(child => child.classList.contains('draggable-item'))
+                                                .map(item => item.textContent.trim());
+                this.outputHiddenInput.value = prioritizedItems.join('; ');
+            }
+
+            reset() {
+                // Move all items back to available container
+                Array.from(this.prioritizedContainer.children).forEach(item => {
+                    if (item.classList.contains('draggable-item')) {
+                        this.availableContainer.appendChild(item);
+                    }
+                });
+                this.updatePlaceholderVisibility();
+                this.updateOutput();
+            }
+        }
+
+        // --- Initialize Form Elements ---
+        const departments = [
+            "Arch.", "BME", "CE", "ChE", "CSE", "EEE", "IPE", "ME", "MME", "NAME", "NCE", "PMRE", "URP", "WRE", "Other"
+        ].sort((a, b) => {
+            if (a === "Other") return 1;
+            if (b === "Other") return -1;
+            return a.localeCompare(b);
         });
 
-        function handleDragStart(e) {
-            draggedItem = e.target;
-            e.dataTransfer.setData('text/plain', e.target.id);
-            e.target.classList.add('dragging');
-        }
+        const activities = [
+            "Formal Dinner/Gala",
+            "Casual Mixer/Reception",
+            "Family-Friendly Picnic/BBQ",
+            "Outdoor Activities (e.g., hiking, beach day)",
+            "Networking Opportunities",
+            "Theme Party",
+            "Other"
+        ].sort((a, b) => {
+            if (a === "Other") return 1;
+            if (b === "Other") return -1;
+            return a.localeCompare(b);
+        });
 
-        prioritizedRoles.addEventListener('dragover', handleDragOver);
-        prioritizedRoles.addEventListener('dragenter', handleDragEnter);
-        prioritizedRoles.addEventListener('dragleave', handleDragLeave);
-        prioritizedRoles.addEventListener('drop', handleDrop);
+        // US States and Canada for checkbox list
+        const statesAndCanada = [
+            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming", "Canada"
+        ].sort((a, b) => a.localeCompare(b));
 
-        availableRoles.addEventListener('dragover', handleDragOver);
-        availableRoles.addEventListener('dragenter', handleDragEnter);
-        availableRoles.addEventListener('dragleave', handleDragLeave);
-        availableRoles.addEventListener('drop', handleDrop);
+        // Populate Department Dropdown
+        const departmentSelect = document.getElementById('department');
+        departments.forEach(dept => {
+            const option = document.createElement('option');
+            option.value = dept;
+            option.textContent = dept;
+            departmentSelect.appendChild(option);
+        });
 
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.currentTarget.classList.add('drag-over');
-            const target = e.target;
-            if (target.classList.contains('draggable-item')) {
-                target.classList.add('bg-yellow-100', 'border-yellow-300');
-            }
-        }
+        // Initialize Activities Drag & Drop
+        const activityDnD = new DragAndDropManager(
+            'available-activities',
+            'prioritized-activities',
+            'activity-placeholder',
+            'prioritizedActivitiesOutput',
+            activities
+        );
 
-        function handleDragEnter(e) {
-            e.preventDefault();
-            e.currentTarget.classList.add('drag-over');
-        }
+        // Populate Location Checkboxes
+        const locationCheckboxesContainer = document.getElementById('location-checkboxes');
+        statesAndCanada.forEach((location, index) => {
+            const label = document.createElement('label');
+            label.classList.add('inline-flex', 'items-center', 'w-full', 'sm:w-auto'); /* Added w-full for better wrapping on small screens */
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.name = 'preferredLocations'; // Name for checkbox group
+            input.value = location;
+            input.classList.add('form-checkbox', 'text-indigo-600', 'h-4', 'w-4');
+            const span = document.createElement('span');
+            span.classList.add('ml-2', 'text-gray-700');
+            span.textContent = location;
 
-        function handleDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
-            document.querySelectorAll('.draggable-item').forEach(item => {
-                item.classList.remove('bg-yellow-100', 'border-yellow-300');
-            });
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
-            document.querySelectorAll('.draggable-item').forEach(item => {
-                item.classList.remove('bg-yellow-100', 'border-yellow-300');
-            });
-
-            if (draggedItem) {
-                if (e.currentTarget.id === 'prioritized-roles') {
-                    if (dropZonePlaceholder && prioritizedRoles.contains(dropZonePlaceholder)) {
-                        dropZonePlaceholder.remove();
-                    }
-                    const afterElement = getDragAfterElement(prioritizedRoles, e.clientY);
-                    if (afterElement == null) {
-                        prioritizedRoles.appendChild(draggedItem);
-                    } else {
-                        prioritizedRoles.insertBefore(draggedItem, afterElement);
-                    }
-                } else if (e.currentTarget.id === 'available-roles') {
-                    // If dropping back to available roles, append to that list
-                    availableRoles.appendChild(draggedItem);
-                    // Re-add placeholder if prioritized list becomes empty
-                    updateDropZonePlaceholder();
-                }
-                draggedItem.classList.remove('dragging');
-                draggedItem = null;
-            }
-        }
-
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-
-        const updateDropZonePlaceholder = () => {
-            if (prioritizedRoles.querySelectorAll('.draggable-item').length === 0) {
-                if (!prioritizedRoles.contains(dropZonePlaceholder)) {
-                    prioritizedRoles.appendChild(dropZonePlaceholder);
-                }
-            } else {
-                if (prioritizedRoles.contains(dropZonePlaceholder)) {
-                    dropZonePlaceholder.remove();
-                }
-            }
-        };
-        const observer = new MutationObserver(updateDropZonePlaceholder);
-        observer.observe(prioritizedRoles, { childList: true });
-
-
-        // --- UI Logic for Volunteer Section Visibility ---
-        volunteerInterestRadios.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                if (e.target.value === "Yes, I'd love to help with planning!" || e.target.value === "Maybe, I'd like more information on roles.") {
-                    volunteerRolesSection.classList.remove('hidden');
-                } else {
-                    volunteerRolesSection.classList.add('hidden');
-                }
-            });
+            label.appendChild(input);
+            label.appendChild(span);
+            locationCheckboxesContainer.appendChild(label);
         });
 
         // --- Form Submission Logic ---
@@ -394,32 +459,74 @@
             e.preventDefault();
             showMessage('Submitting your survey...', 'info');
 
-            if (!db) { // Check if db is initialized (firebaseConfig was present)
-                showMessage('Firebase Firestore not initialized. Cannot save data. Please check Firebase configuration.', 'error');
+            if (!isAuthReady || !userId) {
+                showMessage('Authentication not ready. Please wait a moment and try again.', 'error');
+                return;
+            }
+            if (!db) {
+                showMessage('Firebase Firestore not initialized. Cannot save data.', 'error');
                 return;
             }
 
             // Collect all form data
             const formData = new FormData(reunionSurveyForm);
             const surveyData = {};
+
+            // Handle standard text/radio inputs
             for (let [key, value] of formData.entries()) {
-                // Handle multiple checkboxes for activityInterest
-                if (key === 'activityInterest') {
-                    if (!surveyData[key]) {
-                        surveyData[key] = [];
-                    }
-                    surveyData[key].push(value);
-                } else {
+                // Skip checkboxes and D&D outputs here, they are handled separately below
+                if (key !== 'preferredLocations' && key !== 'prioritizedActivitiesOutput') {
                     surveyData[key] = value;
                 }
             }
 
-            // Get prioritized roles from drag & drop
-            const prioritizedItems = Array.from(prioritizedRoles.children)
-                                            .filter(child => child.classList.contains('draggable-item'))
-                                            .map(item => item.textContent.trim());
-            surveyData.prioritizedVolunteerRoles = prioritizedItems.join('; ');
+            // Handle multiple checkboxes for preferredLocations
+            surveyData.preferredLocations = Array.from(document.querySelectorAll('input[name="preferredLocations"]:checked')).map(cb => cb.value);
 
-            // Ensure volunteer section data is only saved if visible
-            const volunteerInterestValue = document.querySelector('input[name="volunteerInterest"]:checked')?.value;
-            if (volunteerInterestValue !== "Yes, I'd l
+            // Get prioritized activities from drag & drop manager
+            activityDnD.updateOutput(); // Ensure hidden input is updated before submission
+            surveyData.prioritizedActivities = document.getElementById('prioritizedActivitiesOutput').value;
+
+            try {
+                // Firestore path: /artifacts/{appId}/users/{userId}/reunion_surveys/{docId}
+                const docRef = doc(collection(db, `artifacts/${appId}/users/${userId}/reunion_surveys`));
+                await setDoc(docRef, {
+                    ...surveyData,
+                    timestamp: new Date(),
+                    userId: userId
+                });
+                showMessage('Survey submitted successfully! Thank you for your input.', 'success');
+                reunionSurveyForm.reset(); // Clear the form
+                activityDnD.reset(); // Reset Activities D&D
+
+                // Reset checkboxes manually after form.reset()
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+                // Reset department dropdown
+                departmentSelect.value = "";
+
+            } catch (error) {
+                console.error("Error submitting survey:", error);
+                showMessage(`Error submitting survey: ${error.message}`, 'error');
+            }
+        });
+
+        // --- Message Box Function ---
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-blue-100', 'bg-red-100', 'bg-green-100', 'text-blue-800', 'text-red-800', 'text-green-800');
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-100', 'text-red-800');
+            } else if (type === 'success') {
+                messageBox.classList.add('bg-green-100', 'text-green-800');
+            } else { // info
+                messageBox.classList.add('bg-blue-100', 'text-blue-800');
+            }
+            messageBox.classList.remove('hidden');
+            messageBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Initial state setup
+        messageBox.classList.add('hidden');
+    </script>
+</body>
+</html>
