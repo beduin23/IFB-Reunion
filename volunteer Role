@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prioritize Volunteer Roles for Reunion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Styling for draggable items */
+        .draggable-item {
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            user-select: none; /* Prevent text selection during drag */
+        }
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: scale(1.02); /* Slight scale effect when grabbed */
+        }
+        /* Styling for drop zone when item is dragged over it */
+        .drop-zone.drag-over {
+            border-color: #60A5FA; /* Blue-400 */
+            background-color: #DBEAFE; /* Blue-100 */
+        }
+        /* Styling for a dragged item (ghost effect) */
+        .dragging {
+            opacity: 0.5;
+            border-style: dashed;
+            border-color: #9CA3AF; /* Gray-400 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
+
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl max-w-4xl w-full border border-gray-200">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-center mb-6 text-gray-800 leading-tight">
+            Prioritize Your Reunion Volunteer Roles
+        </h1>
+
+        <p class="text-gray-600 mb-8 text-center text-base sm:text-lg">
+            Drag and drop your preferred volunteer roles from the "Available Roles" list to "My Prioritized Roles" to rank them in order of your interest. Then, copy the generated list and paste it into the Google Form.
+        </p>
+
+        <div class="flex flex-col md:flex-row gap-6 md:gap-8">
+            <div class="flex-1 bg-blue-50 p-4 sm:p-5 rounded-lg border-2 border-blue-200 shadow-inner">
+                <h2 class="text-xl sm:text-2xl font-bold mb-4 text-blue-800">Available Roles</h2>
+                <div id="available-roles" class="min-h-[200px] space-y-3 p-2 bg-blue-100 rounded-md border border-blue-300">
+                    <div id="role1" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Venue & Logistics</div>
+                    <div id="role2" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Activities & Entertainment</div>
+                    <div id="role3" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Communications & Marketing</div>
+                    <div id="role4" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Sponsorship & Fundraising</div>
+                    <div id="role5" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Registration & Check-in</div>
+                    <div id="role6" draggable="true" class="draggable-item bg-white p-3 rounded-md shadow-sm cursor-grab hover:bg-blue-200 text-gray-700 font-medium">Alumni Outreach</div>
+                </div>
+            </div>
+
+            <div class="flex-1 bg-green-50 p-4 sm:p-5 rounded-lg border-2 border-green-200 shadow-inner">
+                <h2 class="text-xl sm:text-2xl font-bold mb-4 text-green-800">My Prioritized Roles</h2>
+                <div id="prioritized-roles" class="drop-zone min-h-[200px] border-2 border-dashed border-green-400 p-3 rounded-md flex flex-col gap-3 bg-green-100">
+                    <p id="drop-zone-placeholder" class="text-gray-500 text-sm italic text-center mt-8">Drag roles here to prioritize them</p>
+                </div>
+            </div>
+        </div>
+
+        <button id="generate-list-btn" class="mt-8 w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition duration-300 ease-in-out shadow-lg transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300">
+            Generate List for Google Form
+        </button>
+
+        <div id="output-section" class="mt-6 hidden">
+            <label for="priorities-output" class="block text-gray-700 text-sm font-bold mb-2">
+                Copy this list and paste into the Google Form:
+            </label>
+            <textarea id="priorities-output" rows="3" readonly class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-700 font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+            <button id="copy-btn" class="mt-3 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors duration-300 shadow-md">
+                Copy to Clipboard
+            </button>
+        </div>
+
+        <div id="message-box" class="mt-6 p-4 bg-blue-100 text-blue-800 rounded-lg hidden text-center font-medium shadow-md">
+            </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const availableRoles = document.getElementById('available-roles');
+            const prioritizedRoles = document.getElementById('prioritized-roles');
+            const generateListBtn = document.getElementById('generate-list-btn');
+            const messageBox = document.getElementById('message-box');
+            const dropZonePlaceholder = document.getElementById('drop-zone-placeholder');
+            const outputSection = document.getElementById('output-section');
+            const outputTextArea = document.getElementById('priorities-output');
+            const copyBtn = document.getElementById('copy-btn');
+
+            let draggedItem = null;
+
+            // Add dragstart listener to all draggable items initially
+            document.querySelectorAll('.draggable-item').forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+            });
+
+            function handleDragStart(e) {
+                draggedItem = e.target;
+                e.dataTransfer.setData('text/plain', e.target.id); // Set data for transfer
+                e.target.classList.add('dragging'); // Add class for visual feedback during drag
+            }
+
+            // --- Drop Zone Event Listeners ---
+            prioritizedRoles.addEventListener('dragover', handleDragOver);
+            prioritizedRoles.addEventListener('dragenter', handleDragEnter);
+            prioritizedRoles.addEventListener('dragleave', handleDragLeave);
+            prioritizedRoles.addEventListener('drop', handleDrop);
+
+            function handleDragOver(e) {
+                e.preventDefault(); // Necessary to allow a drop
+                prioritizedRoles.classList.add('drag-over'); // Highlight drop zone
+                const target = e.target;
+                // Highlight item if dragging over another item for reordering
+                if (target.classList.contains('draggable-item')) {
+                    target.classList.add('bg-yellow-100', 'border-yellow-300');
+                }
+            }
+
+            function handleDragEnter(e) {
+                e.preventDefault();
+                prioritizedRoles.classList.add('drag-over'); // Highlight drop zone
+            }
+
+            function handleDragLeave(e) {
+                prioritizedRoles.classList.remove('drag-over'); // Remove highlight from drop zone
+                // Remove highlight from any item that was dragged over
+                document.querySelectorAll('.draggable-item').forEach(item => {
+                    item.classList.remove('bg-yellow-100', 'border-yellow-300');
+                });
+            }
+
+            function handleDrop(e) {
+                e.preventDefault();
+                prioritizedRoles.classList.remove('drag-over');
+                // Remove highlight from any item that was dragged over
+                document.querySelectorAll('.draggable-item').forEach(item => {
+                    item.classList.remove('bg-yellow-100', 'border-yellow-300');
+                });
+
+                if (draggedItem) {
+                    // Remove placeholder if it exists and is currently visible
+                    if (dropZonePlaceholder && dropZonePlaceholder.parentNode === prioritizedRoles) {
+                        dropZonePlaceholder.remove();
+                    }
+
+                    // Get the element to insert the dragged item before for reordering
+                    const afterElement = getDragAfterElement(prioritizedRoles, e.clientY);
+                    if (afterElement == null) {
+                        prioritizedRoles.appendChild(draggedItem);
+                    } else {
+                        prioritizedRoles.insertBefore(draggedItem, afterElement);
+                    }
+                    // Remove temporary drag styling
+                    draggedItem.classList.remove('dragging');
+                    draggedItem = null; // Reset dragged item
+                }
+            }
+
+            // Function to determine where to insert the dragged item based on mouse position
+            function getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')]; // Exclude the dragging item itself
+
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2; // Distance from center of element
+                    if (offset < 0 && offset > closest.offset) { // If mouse is above center and closer than previous closest
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element; // Initial state: no closest element, offset is negative infinity
+            }
+
+            // --- Generate List and Copy Functionality ---
+            generateListBtn.addEventListener('click', () => {
+                const prioritizedItems = Array.from(prioritizedRoles.children)
+                                                .filter(child => child.classList.contains('draggable-item'))
+                                                .map(item => item.textContent.trim());
+
+                if (prioritizedItems.length === 0) {
+                    showMessage("Please drag some roles to 'My Prioritized Roles' before generating the list.", 'error');
+                    outputSection.classList.add('hidden'); // Hide output section
+                    return;
+                }
+
+                const outputString = prioritizedItems.join('; '); // Using semicolon for clear separation
+                outputTextArea.value = outputString;
+                outputSection.classList.remove('hidden'); // Show output section
+
+                showMessage("Your prioritized roles are ready! Copy the text above and paste it into the Google Form.", 'info');
+                outputTextArea.focus(); // Focus on the textarea for easy selection
+                outputTextArea.select(); // Select text for immediate copying
+            });
+
+            copyBtn.addEventListener('click', () => {
+                outputTextArea.select(); // Select the text in the textarea
+                try {
+                    document.execCommand('copy'); // Execute copy command
+                    showMessage('Copied to clipboard! Now paste into the Google Form.', 'success');
+                } catch (err) {
+                    showMessage('Failed to copy. Please manually select and copy the text.', 'error');
+                }
+            });
+
+            // --- Message Box Function ---
+            function showMessage(message, type) {
+                messageBox.textContent = message;
+                // Remove all type-related classes
+                messageBox.classList.remove('hidden', 'bg-blue-100', 'bg-red-100', 'bg-green-100', 'text-blue-800', 'text-red-800', 'text-green-800');
+                // Add specific classes based on message type
+                if (type === 'error') {
+                    messageBox.classList.add('bg-red-100', 'text-red-800');
+                } else if (type === 'success') {
+                    messageBox.classList.add('bg-green-100', 'text-green-800');
+                } else { // info
+                    messageBox.classList.add('bg-blue-100', 'text-blue-800');
+                }
+                messageBox.classList.remove('hidden'); // Ensure it's visible
+                messageBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to message
+            }
+
+            // --- Initial state setup ---
+            // Hide message box and output section initially
+            messageBox.classList.add('hidden');
+            outputSection.classList.add('hidden');
+
+            // Handle placeholder visibility in drop zone
+            const updateDropZonePlaceholder = () => {
+                if (prioritizedRoles.querySelectorAll('.draggable-item').length === 0) {
+                    if (!prioritizedRoles.contains(dropZonePlaceholder)) {
+                        prioritizedRoles.appendChild(dropZonePlaceholder);
+                    }
+                } else {
+                    if (prioritizedRoles.contains(dropZonePlaceholder)) {
+                        dropZonePlaceholder.remove();
+                    }
+                }
+            };
+
+            // Call on load and whenever an item is dropped or returned
+            // (You might need to re-attach this check to dragend if items can be dragged back to original list)
+            updateDropZonePlaceholder();
+
+            // MutationObserver to watch for changes in the prioritizedRoles children
+            const observer = new MutationObserver(updateDropZonePlaceholder);
+            observer.observe(prioritizedRoles, { childList: true });
+
+            // Allow dragging items back to the available roles list
+            availableRoles.addEventListener('dragover', handleDragOver);
+            availableRoles.addEventListener('dragenter', handleDragEnter);
+            availableRoles.addEventListener('dragleave', handleDragLeave);
+            availableRoles.addEventListener('drop', handleDrop); // Reuse handleDrop
+        });
+    </script>
+</body>
+</html>
