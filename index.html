@@ -11,7 +11,26 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-image: url('background.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
         }
+        
+        /* Overlay to ensure readability */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+        
         /* Styling for draggable items */
         .draggable-item {
             transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
@@ -32,11 +51,18 @@
             border-style: dashed;
             border-color: #9CA3AF; /* Gray-400 */
         }
+        
+        /* Enhanced container styling for better visibility */
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
 
-    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl max-w-4xl w-full border border-gray-200">
+    <div class="main-container p-6 sm:p-8 rounded-xl shadow-2xl max-w-4xl w-full border border-gray-200">
         <h1 class="text-3xl sm:text-4xl font-extrabold text-center mb-6 text-gray-800 leading-tight">
             Female BUETian Alumni North America Reunion 2026: North America Interest Survey
         </h1>
@@ -202,52 +228,9 @@
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Firebase Configuration (provided by Canvas environment)
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db;
-        let auth;
-        let userId = null;
-        let isAuthReady = false;
-
         const messageBox = document.getElementById('message-box');
         const reunionSurveyForm = document.getElementById('reunion-survey-form');
-
-        // Initialize Firebase
-        if (Object.keys(firebaseConfig).length > 0) {
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    userId = user.uid;
-                    isAuthReady = true;
-                    showMessage(`Authenticated as user: ${userId}`, 'info');
-                } else {
-                    try {
-                        if (initialAuthToken) {
-                            await signInWithCustomToken(auth, initialAuthToken);
-                        } else {
-                            await signInAnonymously(auth);
-                        }
-                    } catch (error) {
-                        console.error("Firebase authentication error:", error);
-                        showMessage(`Authentication failed: ${error.message}`, 'error');
-                    }
-                }
-            });
-        } else {
-            showMessage("Firebase configuration not found. Data will not be saved.", 'error');
-        }
 
         // --- Reusable Drag & Drop Manager ---
         class DragAndDropManager {
@@ -457,16 +440,7 @@
         // --- Form Submission Logic ---
         reunionSurveyForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            showMessage('Submitting your survey...', 'info');
-
-            if (!isAuthReady || !userId) {
-                showMessage('Authentication not ready. Please wait a moment and try again.', 'error');
-                return;
-            }
-            if (!db) {
-                showMessage('Firebase Firestore not initialized. Cannot save data.', 'error');
-                return;
-            }
+            showMessage('Processing your survey...', 'info');
 
             // Collect all form data
             const formData = new FormData(reunionSurveyForm);
@@ -488,14 +462,13 @@
             surveyData.prioritizedActivities = document.getElementById('prioritizedActivitiesOutput').value;
 
             try {
-                // Firestore path: /artifacts/{appId}/users/{userId}/reunion_surveys/{docId}
-                const docRef = doc(collection(db, `artifacts/${appId}/users/${userId}/reunion_surveys`));
-                await setDoc(docRef, {
-                    ...surveyData,
-                    timestamp: new Date(),
-                    userId: userId
-                });
-                showMessage('Survey submitted successfully! Thank you for your input.', 'success');
+                // Display the collected data in console for now
+                console.log('Survey Data:', surveyData);
+                
+                // Show success message
+                showMessage('Survey completed successfully! Thank you for your input. (Note: Data is logged to console for demonstration)', 'success');
+                
+                // Reset the form
                 reunionSurveyForm.reset(); // Clear the form
                 activityDnD.reset(); // Reset Activities D&D
 
@@ -505,8 +478,8 @@
                 departmentSelect.value = "";
 
             } catch (error) {
-                console.error("Error submitting survey:", error);
-                showMessage(`Error submitting survey: ${error.message}`, 'error');
+                console.error("Error processing survey:", error);
+                showMessage(`Error processing survey: ${error.message}`, 'error');
             }
         });
 
